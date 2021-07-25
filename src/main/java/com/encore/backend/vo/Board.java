@@ -1,5 +1,6 @@
 package com.encore.backend.vo;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -12,13 +13,13 @@ import lombok.Data;
 public class Board {
     @Id
     private String id;
-    private String user_id;
-    private String nickname;
+    private String userId;
+    private String nickName;
     private String title;
     private String subtitle;
     private String titleImage;
     private int likes;
-    private String modDatetime;
+    private Date modDatetime;
     private List<Content> contents;
     private List<Comment> comments;
     private List<String> tags;

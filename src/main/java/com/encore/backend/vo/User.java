@@ -2,6 +2,7 @@ package com.encore.backend.vo;
 
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
@@ -9,10 +10,11 @@ import lombok.Data;
 @Document(collection = "user")
 @Data
 public class User {
+    @Id
     private String id;
     private String email;
     private String name;
-    private String nickname;
+    private String nickName;
     private String intro;
     private String profileImage;
     private List<String> scraps;
