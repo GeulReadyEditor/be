@@ -1,4 +1,9 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://onegomongo.ddns.net:80/onego
+      host: onegomongo.ddns.net
+      port: 80
+      authentication-database: admin
+      database: onego
+      username: onego
+      password: test123
