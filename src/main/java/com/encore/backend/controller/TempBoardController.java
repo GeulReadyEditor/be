@@ -43,6 +43,12 @@ public class TempBoardController {
                 .body("insert tempBoard " + (result ? "success" : "fail"));
     }
 
+    @PutMapping()
+    public ResponseEntity<String> updateTempBoard(@RequestBody TempBoard tempBoard) {
+        boolean result = tempBoardService.updateTempBoard(tempBoard);
+        return new ResponseEntity<>("ok?", HttpStatus.OK);
+    }
+
     @DeleteMapping()
     public ResponseEntity<String> deleteTempBoard(@RequestBody Map<String, Object> parameter) {
         boolean result = tempBoardService.deleteTempBoard((String)parameter.get("boardIdx"));

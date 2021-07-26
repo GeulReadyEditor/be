@@ -60,6 +60,16 @@ public class TempBoardService {
         }
     }
 
+    public boolean updateTempBoard(TempBoard tempBoard) {
+        try {
+            tempBoardRepository.save(tempBoard);
+            return true;
+        } catch (Exception e) {
+            log.info("error ", e);
+            return false;
+        }
+    }
+
     public boolean deleteTempBoard(String boardIdx) {
         try {
             boolean check = tempBoardRepository.existsById(boardIdx);
