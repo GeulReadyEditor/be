@@ -13,7 +13,7 @@ import lombok.Data;
 public class TempBoard {
     @Id
     private String id;
-    private String user_id;
+    private String userId;
     private String title;
     private String subtitle;
     private String titleImage;
