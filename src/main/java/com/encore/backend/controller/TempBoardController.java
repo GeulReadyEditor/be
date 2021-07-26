@@ -1,5 +1,6 @@
 package com.encore.backend.controller;
 
+import com.encore.backend.service.BoardService;
 import com.encore.backend.service.TempBoardService;
 import com.encore.backend.vo.TempBoard;
 import com.encore.backend.vo.TempBoardInputForm;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class TempBoardController {
 
     private final TempBoardService tempBoardService;
+    private final BoardService boardService;
 
     @GetMapping()
     public List<TempBoard> getAllTempBoard(@RequestBody TempBoardInputForm form) {
@@ -37,16 +39,13 @@ public class TempBoardController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> writeTempBoard(@RequestBody TempBoard tempBoard) {
-        boolean result = tempBoardService.writeTempBoard(tempBoard);
-        return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
-                .body("insert tempBoard " + (result ? "success" : "fail"));
-    }
-
-    @PutMapping()
-    public ResponseEntity<String> updateTempBoard(@RequestBody TempBoard tempBoard) {
-        boolean result = tempBoardService.updateTempBoard(tempBoard);
-        return new ResponseEntity<>("ok?", HttpStatus.OK);
+    public ResponseEntity<String> upsertTempBoard(@RequestBody TempBoard tempBoard) {
+        String result = tempBoardService.upsertTempBoard(tempBoard);
+        if(result != null) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
+        }
     }
 
     @DeleteMapping()

@@ -4,7 +4,6 @@ import com.encore.backend.repository.TempBoardRepository;
 import com.encore.backend.vo.TempBoard;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -38,35 +37,21 @@ public class TempBoardService {
         return list;
     }
 
-    public boolean writeTempBoard(TempBoard tempBoard) {
+    public String upsertTempBoard(TempBoard tempBoard) {
         try {
-            boolean exists = false;
-            log.info("id={}", tempBoard.getId());
-            // Exist로 존재 유무 파악! modDateTime, userId를 사용하자!
-            if(tempBoard.getId() != null) {
-                exists = tempBoardRepository.existsById(tempBoard.getId());
-                log.info("exists? {}", exists);
-            }
-            if(exists) {
-                tempBoardRepository.save(tempBoard);
+            if(tempBoard.getId() == null) {
+                TempBoard ret = tempBoardRepository.insert(tempBoard);
+                return ret.getId();
             } else {
-                tempBoardRepository.insert(tempBoard);
+                boolean check = tempBoardRepository.existsById(tempBoard.getId());
+                if(!check) return null;
+
+                tempBoardRepository.save(tempBoard);
+                return tempBoard.getId();
             }
-
-            return true;
         } catch (Exception e) {
             log.info("error ", e);
-            return false;
-        }
-    }
-
-    public boolean updateTempBoard(TempBoard tempBoard) {
-        try {
-            tempBoardRepository.save(tempBoard);
-            return true;
-        } catch (Exception e) {
-            log.info("error ", e);
-            return false;
+            return null;
         }
     }
 
