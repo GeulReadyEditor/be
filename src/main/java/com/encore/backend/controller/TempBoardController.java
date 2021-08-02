@@ -21,7 +21,6 @@ import java.util.Optional;
 public class TempBoardController {
 
     private final TempBoardService tempBoardService;
-    private final BoardService boardService;
 
     @GetMapping()
     public List<TempBoard> getAllTempBoard(@RequestBody TempBoardInputForm form) {

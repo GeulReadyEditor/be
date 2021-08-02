@@ -74,7 +74,7 @@ public class BoardController {
     }
 
     @PutMapping("/comment")
-    public ResponseEntity<String> udpateComment(@RequestBody Map<String, Object> parameters) {
+    public ResponseEntity<String> updateComment(@RequestBody Map<String, Object> parameters) {
         boolean result = service.updateComment(parameters);
         return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
                 .body("update comment " + (result ? "suceess" : "fail"));
