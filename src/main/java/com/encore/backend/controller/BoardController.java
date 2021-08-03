@@ -48,7 +48,7 @@ public class BoardController {
 
     @DeleteMapping("/board")
     public ResponseEntity<String> deleteBoard(@RequestBody Map<String, Object> parameters) {
-        boolean result = service.deleteBoard((String) parameters.get("id"));
+        boolean result = service.deleteBoard((String) parameters.get("boardId"));
         return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
                 .body("delete board " + (result ? "suceess" : "fail"));
     }

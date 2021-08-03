@@ -63,11 +63,11 @@ public class BoardService {
     public boolean deleteBoard(String boardId) {
         try {
             repo.deleteById(boardId);
+            return repo.existsById(boardId);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 
     public List<Comment> getComment(Map<String, Object> parameters) {
