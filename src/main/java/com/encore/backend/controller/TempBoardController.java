@@ -1,8 +1,8 @@
 package com.encore.backend.controller;
 
-import com.encore.backend.service.BoardService;
 import com.encore.backend.service.TempBoardService;
 import com.encore.backend.vo.TempBoard;
+import com.encore.backend.vo.TempBoardDeleteInputForm;
 import com.encore.backend.vo.TempBoardInputForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -29,13 +27,11 @@ public class TempBoardController {
             return tempBoardService.findTempBoard(form.getTempBoardId());
         }
         else if(form.getUserId() != null) {
-            int pageNum = form.getPageNumber().intValue();
-            log.info("pageNum={}", pageNum);
+            if(form.getPageNumber() == null) throw new IllegalArgumentException();
 
-            return tempBoardService.findAllByUser_id(form.getUserId(), pageNum);
+            return tempBoardService.findAllByUser_id(form.getUserId(), form.getPageNumber().intValue());
         }
-        else if(form.getUserId() == null) throw new IllegalArgumentException();
-        return null;
+        else throw new IllegalArgumentException();
     }
 
     @PostMapping()
@@ -49,9 +45,10 @@ public class TempBoardController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<String> deleteTempBoard(@RequestBody Map<String, Object> parameter) {
-        boolean result = tempBoardService.deleteTempBoard((String)parameter.get("boardIdx"));
-        log.info("result={}", result);
+    public ResponseEntity<String> deleteTempBoard(@RequestBody TempBoardDeleteInputForm form) {
+        if(form == null) throw new IllegalArgumentException();
+
+        boolean result = tempBoardService.deleteTempBoard(form.getBoardIdx());
         if(result) {
             return new ResponseEntity<>("delete tempBoard Success", HttpStatus.OK);
         } else {
