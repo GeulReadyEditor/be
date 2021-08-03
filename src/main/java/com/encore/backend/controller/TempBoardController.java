@@ -17,7 +17,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/tempboard")
+@RequestMapping("/tempBoard")
 public class TempBoardController {
 
     private final TempBoardService tempBoardService;
@@ -34,6 +34,7 @@ public class TempBoardController {
 
             return tempBoardService.findAllByUser_id(form.getUserId(), pageNum);
         }
+        else if(form.getUserId() == null) throw new IllegalArgumentException();
         return null;
     }
 
