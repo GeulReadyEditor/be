@@ -28,7 +28,7 @@ public class BoardService {
 
     public List<Board> selectBoard(Map<String, Object> parameters) {
         String boardId = (String) parameters.get("boardId");
-        int pageNumber = (Integer) parameters.get("pageNumber");
+        int pageNumber = Integer.parseInt((String) parameters.get("pageNumber"));
         Page<Board> page = null;
         if (boardId != null) {
             page = repo.findById(boardId, PageRequest.of(pageNumber, 1));

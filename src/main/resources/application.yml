@@ -11,8 +11,4 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_D6Iq5MI4q
-
-token:
-  expiration_time: 1800000 # 60초*30분*1000밀리세컨드
-  secret: user_token
+          issuer-uri: https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_brwr9Qyvh
