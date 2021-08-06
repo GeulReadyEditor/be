@@ -3,7 +3,7 @@ package com.encore.backend.controller;
 import com.encore.backend.service.TempBoardService;
 import com.encore.backend.vo.TempBoard;
 import com.encore.backend.vo.TempBoardDeleteInputForm;
-import com.encore.backend.vo.TempBoardInputForm;
+import com.encore.backend.dto.TempBoardInputForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

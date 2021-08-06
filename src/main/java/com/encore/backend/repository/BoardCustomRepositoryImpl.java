@@ -51,4 +51,11 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                 new Update().pull("comments", new Comment(commentId)), Board.class);
         return result.getModifiedCount() > 0;
     }
+
+    @Override
+    public boolean updateLikes(String boardId, Integer quantity) {
+        UpdateResult result = operations.updateFirst(Query.query(Criteria.where("_id").is(boardId)),
+                new Update().set("likes", quantity), Board.class);
+        return result.getModifiedCount() > 0;
+    }
 }

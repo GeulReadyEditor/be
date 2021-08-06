@@ -1,4 +1,4 @@
-package com.encore.backend.vo;
+package com.encore.backend.dto;
 
 import lombok.Data;
 

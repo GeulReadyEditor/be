@@ -1,7 +1,9 @@
 package com.encore.backend.repository;
 
-import java.util.List;
-
 public interface UserCustomRepository {
     boolean deleteUserByEmail(String email);
+
+    boolean deleteLikes(String userEmail, String boardId);
+
+    boolean addLikes(String userEmail, String boardId);
 }
