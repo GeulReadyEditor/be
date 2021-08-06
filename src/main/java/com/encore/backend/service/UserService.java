@@ -1,6 +1,7 @@
 package com.encore.backend.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.encore.backend.dto.UserDto;
 import com.encore.backend.vo.UserVO;
@@ -19,4 +20,16 @@ public interface UserService extends UserDetailsService {
     boolean deleteUserByEmail(String email);
 
     List<String> getUserScraps(String email, int scrapPageNumber);
+
+    boolean addUserScraps(String email, String boardId);
+
+    boolean removeUserScraps(String email, String boardId);
+
+    List<String> getUserFollowers(String email);
+
+    boolean addUserFollwers(String email, String followerEmail);
+
+    boolean removeUserFollwers(String email, String followerEmail);
+
+    int getUserScrapsCount(String email);
 }

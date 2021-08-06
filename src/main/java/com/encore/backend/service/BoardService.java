@@ -28,8 +28,8 @@ public class BoardService {
 
     public List<Board> selectBoard(Map<String, Object> parameters) {
         String boardId = (String) parameters.get("boardId");
-        int pageNumber = Integer.parseInt((String) parameters.get("pageNumber")) - 1;
         Page<Board> page = null;
+        int pageNumber = Integer.parseInt((String) parameters.get("pageNumber")) - 1;
         if (boardId != null) {
             page = repo.findById(boardId, PageRequest.of(pageNumber, 1));
         } else {

@@ -1,13 +1,8 @@
 package com.encore.backend.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.encore.backend.dto.UserDto;
 import com.encore.backend.service.UserService;
 import com.encore.backend.vo.ResponseUser;
-import com.encore.backend.vo.UserVO;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -21,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -44,35 +38,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
     }
 
-    @GetMapping("/users")
-    public ResponseEntity<List<ResponseUser>> getUsers() {
-        Iterable<UserVO> userList = userService.getUserByAll();
-        List<ResponseUser> responseUsers = new ArrayList<ResponseUser>();
-        userList.forEach(v -> {
-            responseUsers.add(new ModelMapper().map(v, ResponseUser.class));
-        });
-        return ResponseEntity.status(HttpStatus.OK).body(responseUsers);
-    }
-
     @GetMapping("/users/{email}")
     public ResponseEntity<ResponseUser> getUser(@PathVariable String email) {
         UserDto userDto = userService.getUserDetailsByEmail(email);
         ResponseUser responseUser = new ModelMapper().map(userDto, ResponseUser.class);
-        return ResponseEntity.status(HttpStatus.OK).body(responseUser);
+        return ResponseEntity.status(userDto == null ? HttpStatus.NO_CONTENT : HttpStatus.OK).body(responseUser);
     }
 
     @DeleteMapping("/users/{email}")
-    public ResponseEntity<ResponseUser> deleteUser(@PathVariable String email) {
-        boolean userDto = userService.deleteUserByEmail(email);
-        ResponseUser responseUser = new ModelMapper().map(userDto, ResponseUser.class);
-        return ResponseEntity.status(HttpStatus.OK).body(responseUser);
-    }
+    public ResponseEntity<String> deleteUser(@PathVariable String email) {
+        boolean result = userService.deleteUserByEmail(email);
 
-    @GetMapping("/scraps/{email}")
-    public ResponseEntity<List<String>> getUserScraps(@PathVariable String email,
-            @RequestParam Map<String, Object> parameters) {
-        int scrapPageNumber = Integer.parseInt((String) parameters.get("pageNumber"));
-        List<String> scraps = userService.getUserScraps(email, scrapPageNumber);
-        return ResponseEntity.status(HttpStatus.OK).body(scraps);
+        return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
+                .body("delete user " + (result ? "suceess" : "fail"));
     }
 }

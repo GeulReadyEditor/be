@@ -2,6 +2,7 @@ package com.encore.backend.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import com.encore.backend.dto.UserDto;
@@ -90,7 +91,43 @@ public class UserServiceImpl implements UserService {
     public List<String> getUserScraps(String email, int scrapPageNumber) {
         int start = (scrapPageNumber - 1) * 10;
         int end = scrapPageNumber * 10;
-        return userRepository.findScrapsByEmail(email, start, end);
+        List<String> returnScraps = userRepository.findScrapsByEmail(email, start, end).getScraps();
+        return returnScraps;
+    }
+
+    @Override
+    public boolean addUserScraps(String email, String boardId) {
+        boolean result = userRepository.addUserScraps(email, boardId);
+        return result;
+    }
+
+    @Override
+    public boolean removeUserScraps(String email, String boardId) {
+        boolean result = userRepository.removeUserScraps(email, boardId);
+        return result;
+    }
+
+    @Override
+    public List<String> getUserFollowers(String email) {
+        List<String> followers = userRepository.findFollowersByEmail(email).getFollowers();
+        return followers;
+    }
+
+    @Override
+    public boolean addUserFollwers(String email, String followerEmail) {
+        boolean result = userRepository.addUserFollwers(email, followerEmail);
+        return result;
+    }
+
+    @Override
+    public boolean removeUserFollwers(String email, String followerEmail) {
+        boolean result = userRepository.removeUserFollwers(email, followerEmail);
+        return result;
+    }
+
+    @Override
+    public int getUserScrapsCount(String email) {
+        return 0;
     }
 
 }
