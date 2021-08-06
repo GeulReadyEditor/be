@@ -1,15 +1,17 @@
 package com.encore.backend.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.encore.backend.repository.TempBoardRepository;
 import com.encore.backend.vo.TempBoard;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -22,11 +24,11 @@ public class TempBoardService {
         this.tempBoardRepository = tempBoardRepository;
     }
 
-    public List<TempBoard> findAllByUser_id(String userId, int pageNum) {
-        //Page<TempBoard> ret = tempBoardRepository.findAll(userId, PageRequest.of(pageNum, 10));
-        return tempBoardRepository.
-                findByUserId(userId, PageRequest.of(pageNum, 10, Sort.Direction.DESC, "userId"))
-                .getContent();
+    public List<TempBoard> findAllByUser_id(String userEmail, int pageNum) {
+        // Page<TempBoard> ret = tempBoardRepository.findAll(userId,
+        // PageRequest.of(pageNum, 10));
+        return tempBoardRepository
+                .findByUserEmail(userEmail, PageRequest.of(pageNum, 10, Sort.Direction.DESC, "userEmail")).getContent();
     }
 
     public List<TempBoard> findTempBoard(String id) {
@@ -39,12 +41,13 @@ public class TempBoardService {
 
     public String upsertTempBoard(TempBoard tempBoard) {
         try {
-            if(tempBoard.getId() == null) {
+            if (tempBoard.getId() == null) {
                 TempBoard ret = tempBoardRepository.insert(tempBoard);
                 return ret.getId();
             } else {
                 boolean check = tempBoardRepository.existsById(tempBoard.getId());
-                if(!check) return null;
+                if (!check)
+                    return null;
 
                 tempBoardRepository.save(tempBoard);
                 return tempBoard.getId();
@@ -59,7 +62,8 @@ public class TempBoardService {
         try {
             boolean check = tempBoardRepository.existsById(boardIdx);
             log.info("check={}", check);
-            if(!check) return false;
+            if (!check)
+                return false;
 
             tempBoardRepository.deleteById(boardIdx);
 
@@ -68,6 +72,11 @@ public class TempBoardService {
             log.info("error ", e);
             return false;
         }
+    }
+
+    public long getBoardsCount(String userEmail) {
+        long result = tempBoardRepository.countByUserEmail(userEmail);
+        return result;
     }
 
 }

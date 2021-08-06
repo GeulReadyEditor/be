@@ -13,4 +13,5 @@ public interface BoardCustomRepository {
     boolean removeComment(String boardId, String commentId);
 
     boolean updateBoard(String boardId, List<Content> contents);
+
 }

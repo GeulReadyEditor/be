@@ -2,8 +2,6 @@ package com.encore.backend.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import com.encore.backend.dto.UserDto;
 import com.encore.backend.repository.UserRepository;
@@ -12,8 +10,6 @@ import com.encore.backend.vo.UserVO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,17 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
-    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        userDto.setUserId(UUID.randomUUID().toString());
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         UserVO user = mapper.map(userDto, UserVO.class);
@@ -40,20 +33,10 @@ public class UserServiceImpl implements UserService {
         user.setLikes(new ArrayList<String>());
         user.setScraps(new ArrayList<String>());
         user.setTags(new ArrayList<String>());
-        user.setEncryptedPwd(passwordEncoder.encode(userDto.getPwd()));
 
         userRepository.save(user);
         UserDto returnUserDto = mapper.map(user, UserDto.class);
         return returnUserDto;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserVO userEntity = userRepository.findByEmail(username);
-        if (userEntity == null)
-            throw new UsernameNotFoundException(username);
-
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(), true, true, true, true, new ArrayList<>());
     }
 
     @Override
@@ -79,6 +62,12 @@ public class UserServiceImpl implements UserService {
         }
         UserDto userDto = new ModelMapper().map(entity, UserDto.class);
         return userDto;
+    }
+
+    @Override
+    public boolean updateUserByEmail(String email, UserVO user) {
+        boolean result = userRepository.updateUserByEmail(email, user);
+        return result;
     }
 
     @Override
@@ -127,7 +116,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int getUserScrapsCount(String email) {
-        return 0;
+        int result = userRepository.findScrapsCountByEmail(email);
+        return result;
     }
 
 }

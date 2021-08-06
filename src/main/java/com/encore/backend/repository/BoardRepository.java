@@ -1,6 +1,7 @@
 package com.encore.backend.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import com.encore.backend.vo.Board;
 
@@ -27,4 +28,12 @@ public interface BoardRepository extends MongoRepository<Board, String>, BoardCu
 
     @Query(fields = "{comments:0}")
     Page<Board> findAllByOrderByModDatetimeDesc(PageRequest of);
+
+    Long countByTitleLikeOrNickNameOrTagsIn(String title, String nickName, String tag);
+
+    Long countByTitleLike(String title);
+
+    Long countByNickNameLike(String nickName);
+
+    Long countByTagsIn(String tag);
 }

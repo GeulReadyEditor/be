@@ -1,5 +1,7 @@
 package com.encore.backend.repository;
 
+import com.encore.backend.vo.UserVO;
+
 public interface UserCustomRepository {
 
     int findScrapsCountByEmail(String email);
@@ -14,4 +16,5 @@ public interface UserCustomRepository {
 
     boolean removeUserFollwers(String email, String follower);
 
+    boolean updateUserByEmail(String email, UserVO user);
 }

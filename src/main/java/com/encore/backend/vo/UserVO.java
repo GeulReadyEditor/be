@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 
-@Document(collection = "users")
+@Document(collection = "user")
 @Data
 public class UserVO {
     @Id
@@ -17,7 +17,6 @@ public class UserVO {
     private String nickName;
     private String intro;
     private String profileImage;
-    private String encryptedPwd;
     private List<String> scraps;
     private List<String> likes;
     private List<String> followers;

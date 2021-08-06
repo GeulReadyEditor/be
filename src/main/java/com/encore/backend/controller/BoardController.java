@@ -35,6 +35,12 @@ public class BoardController {
         return ResponseEntity.status(list == null ? HttpStatus.NOT_FOUND : HttpStatus.OK).body(list);
     }
 
+    @GetMapping("/board/count")
+    public ResponseEntity<Long> getBoardCount(@RequestParam Map<String, Object> parameters) {
+        long count = service.getBoardsCount(parameters);
+        return ResponseEntity.status(HttpStatus.OK).body(count);
+    }
+
     @PostMapping("/board")
     public ResponseEntity<String> insertBoard(@RequestBody Board board) {
         boolean result = service.insertBoard(board);

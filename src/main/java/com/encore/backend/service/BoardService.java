@@ -49,6 +49,26 @@ public class BoardService {
         return page.getContent();
     }
 
+    public Long getBoardsCount(Map<String, Object> parameters) {
+        Long result = -1L;
+        String title = (String) parameters.get("boardTitle");
+        String nickName = (String) parameters.get("nickName");
+        String tag = (String) parameters.get("tag");
+        System.out.println(title);
+        if (title != null && nickName != null && tag != null) {
+            result = repo.countByTitleLikeOrNickNameOrTagsIn(title, nickName, tag);
+        } else if (title != null) {
+            result = repo.countByTitleLike(title);
+        } else if (nickName != null) {
+            result = repo.countByNickNameLike(nickName);
+        } else if (tag != null) {
+            result = repo.countByTagsIn(tag);
+        } else {
+            result = repo.count();
+        }
+        return result;
+    }
+
     public boolean insertBoard(Board board) {
         board.setModDatetime(Calendar.getInstance().getTime());
         if (repo.insert(board) == null)
@@ -85,7 +105,7 @@ public class BoardService {
     public boolean insertComment(Map<String, Object> parameters) {
         String boardId = (String) parameters.get("boardId");
         Calendar cal = Calendar.getInstance();
-        Comment comment = new Comment(new ObjectId().toString(), (String) parameters.get("userId"),
+        Comment comment = new Comment(new ObjectId().toString(), (String) parameters.get("userEmail"),
                 (String) parameters.get("nickName"), (String) parameters.get("comment"), cal.getTime());
         return repo.insertComment(boardId, comment);
     }
@@ -101,10 +121,9 @@ public class BoardService {
         String commentId = (String) parameters.get("commentId");
         String comment = (String) parameters.get("comment");
         String nickName = (String) parameters.get("nickName");
-        String userId = (String) parameters.get("userId");
+        String userId = (String) parameters.get("userEmail");
         Date modDatetime = new Date();
         Comment commentData = new Comment(commentId, userId, nickName, comment, modDatetime);
         return repo.updateComment(boardId, commentData);
     }
-
 }
