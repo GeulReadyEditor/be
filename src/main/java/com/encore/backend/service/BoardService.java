@@ -28,11 +28,11 @@ public class BoardService {
 
     public List<Board> selectBoard(Map<String, Object> parameters) {
         String boardId = (String) parameters.get("boardId");
-        int pageNumber = Integer.parseInt((String) parameters.get("pageNumber")) - 1;
         Page<Board> page = null;
         if (boardId != null) {
-            page = repo.findById(boardId, PageRequest.of(pageNumber, 1));
+            page = repo.findById(boardId, PageRequest.of(0, 1));
         } else {
+            int pageNumber = Integer.parseInt((String) parameters.get("pageNumber")) - 1;
             String title = (String) parameters.get("boardTitle");
             String nickName = (String) parameters.get("nickName");
             String tag = (String) parameters.get("tag");
