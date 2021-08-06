@@ -1,14 +1,11 @@
 package com.encore.backend.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.encore.backend.dto.UserDto;
 import com.encore.backend.vo.UserVO;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
-
-public interface UserService extends UserDetailsService {
+public interface UserService {
     UserDto createUser(UserDto userDto);
 
     UserDto getUserByUserId(String userId);
@@ -32,4 +29,6 @@ public interface UserService extends UserDetailsService {
     boolean removeUserFollowers(String email, String followerEmail);
 
     int getUserScrapsCount(String email);
+
+    boolean updateUserByEmail(String email, UserVO user);
 }
