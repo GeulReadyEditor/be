@@ -38,7 +38,7 @@ public class FollowerController {
     public ResponseEntity<String> addUserFollwer(@PathVariable String email,
             @RequestBody Map<String, Object> parameters) {
         String follower = (String) parameters.get("followerEmail");
-        boolean result = userService.addUserFollwers(email, follower);
+        boolean result = userService.addUserFollowers(email, follower);
 
         return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
                 .body("insert scrap to user " + (result ? "suceess" : "fail"));
@@ -48,7 +48,7 @@ public class FollowerController {
     public ResponseEntity<String> removeUserFollower(@PathVariable String email,
             @RequestBody Map<String, Object> parameters) {
         String followerEmail = (String) parameters.get("followerEmail");
-        boolean result = userService.removeUserFollwers(email, followerEmail);
+        boolean result = userService.removeUserFollowers(email, followerEmail);
 
         return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
                 .body("remove scrap to user " + (result ? "suceess" : "fail"));

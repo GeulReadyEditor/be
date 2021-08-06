@@ -27,9 +27,9 @@ public interface UserService extends UserDetailsService {
 
     List<String> getUserFollowers(String email);
 
-    boolean addUserFollwers(String email, String followerEmail);
+    boolean addUserFollowers(String email, String followerEmail);
 
-    boolean removeUserFollwers(String email, String followerEmail);
+    boolean removeUserFollowers(String email, String followerEmail);
 
     int getUserScrapsCount(String email);
 }

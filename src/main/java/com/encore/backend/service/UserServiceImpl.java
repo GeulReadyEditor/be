@@ -114,14 +114,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addUserFollwers(String email, String followerEmail) {
-        boolean result = userRepository.addUserFollwers(email, followerEmail);
+    public boolean addUserFollowers(String email, String followerEmail) {
+        boolean result = userRepository.addUserFollowers(email, followerEmail);
         return result;
     }
 
     @Override
-    public boolean removeUserFollwers(String email, String followerEmail) {
-        boolean result = userRepository.removeUserFollwers(email, followerEmail);
+    public boolean removeUserFollowers(String email, String followerEmail) {
+        boolean result = userRepository.removeUserFollowers(email, followerEmail);
         return result;
     }
 

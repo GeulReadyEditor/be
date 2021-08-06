@@ -44,14 +44,14 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     }
 
     @Override
-    public boolean addUserFollwers(String email, String followerEmail) {
+    public boolean addUserFollowers(String email, String followerEmail) {
         UpdateResult result = operations.updateFirst(Query.query(Criteria.where("email").is(email)),
                 new Update().push("followers", followerEmail), UserVO.class);
         return result.getModifiedCount() > 0;
     }
 
     @Override
-    public boolean removeUserFollwers(String email, String follower) {
+    public boolean removeUserFollowers(String email, String follower) {
         UpdateResult result = operations.updateFirst(Query.query(Criteria.where("email").is(email)),
                 new Update().pull("followers", follower), UserVO.class);
         return result.getModifiedCount() > 0;

@@ -12,9 +12,9 @@ public interface UserCustomRepository {
 
     boolean removeUserScraps(String email, String boardId);
 
-    boolean addUserFollwers(String email, String followerEmail);
+    boolean addUserFollowers(String email, String followerEmail);
 
-    boolean removeUserFollwers(String email, String follower);
+    boolean removeUserFollowers(String email, String follower);
 
 
     boolean deleteLikes(String userEmail, String boardId);
