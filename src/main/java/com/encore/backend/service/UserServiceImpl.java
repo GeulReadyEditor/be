@@ -1,6 +1,7 @@
 package com.encore.backend.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.encore.backend.dto.UserDto;
@@ -77,6 +78,19 @@ public class UserServiceImpl implements UserService {
         }
         UserDto userDto = new ModelMapper().map(entity, UserDto.class);
         return userDto;
+    }
+
+    @Override
+    public boolean deleteUserByEmail(String email) {
+        boolean flag = userRepository.deleteUserByEmail(email);
+        return flag;
+    }
+
+    @Override
+    public List<String> getUserScraps(String email, int scrapPageNumber) {
+        int start = (scrapPageNumber - 1) * 10;
+        int end = scrapPageNumber * 10;
+        return userRepository.findScrapsByEmail(email, start, end);
     }
 
 }

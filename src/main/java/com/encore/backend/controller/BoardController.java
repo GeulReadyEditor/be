@@ -57,7 +57,7 @@ public class BoardController {
     }
 
     @GetMapping("/comment")
-    public ResponseEntity<List<Comment>> getComment(@RequestBody Map<String, Object> parameters) {
+    public ResponseEntity<List<Comment>> getComment(@RequestParam Map<String, Object> parameters) {
         List<Comment> comments = service.getComment(parameters);
         return ResponseEntity.status(comments == null ? HttpStatus.NOT_FOUND : HttpStatus.OK).body(comments);
     }

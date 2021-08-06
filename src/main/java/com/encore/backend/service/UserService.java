@@ -1,5 +1,7 @@
 package com.encore.backend.service;
 
+import java.util.List;
+
 import com.encore.backend.dto.UserDto;
 import com.encore.backend.vo.UserVO;
 
@@ -13,4 +15,8 @@ public interface UserService extends UserDetailsService {
     Iterable<UserVO> getUserByAll();
 
     UserDto getUserDetailsByEmail(String userName);
+
+    boolean deleteUserByEmail(String email);
+
+    List<String> getUserScraps(String email, int scrapPageNumber);
 }
