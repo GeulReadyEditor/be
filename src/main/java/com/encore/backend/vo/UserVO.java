@@ -13,7 +13,6 @@ public class UserVO {
     @Id
     private String userId;
     private String email;
-    private String name;
     private String nickName;
     private String intro;
     private String profileImage;
