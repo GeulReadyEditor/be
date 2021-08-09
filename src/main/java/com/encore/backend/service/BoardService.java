@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.encore.backend.repository.BoardRepository;
+import com.encore.backend.repository.board.BoardRepository;
 import com.encore.backend.vo.Board;
 import com.encore.backend.vo.Comment;
 import com.encore.backend.vo.Content;

@@ -1,7 +1,7 @@
 package com.encore.backend.service;
 
-import com.encore.backend.repository.BoardRepository;
-import com.encore.backend.repository.UserRepository;
+import com.encore.backend.repository.board.BoardRepository;
+import com.encore.backend.repository.user.UserRepository;
 import com.encore.backend.vo.Board;
 import com.encore.backend.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,8 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public int getBoardLikes(String boardId) {
         Optional<Board> boardDto = boardRepository.findById(boardId);
-        if(boardDto == null) throw new IllegalArgumentException();
+        if (boardDto == null)
+            throw new IllegalArgumentException();
 
         Board board = boardDto.get();
         return board.getLikes();
@@ -39,11 +40,14 @@ public class LikeServiceImpl implements LikeService {
         boolean existence = checkExistence(userEmail, boardId);
 
         int boardLikes = getBoardLikes(boardId);
-        if(existence) boardLikes -= 1;
-        else boardLikes += 1;
+        if (existence)
+            boardLikes -= 1;
+        else
+            boardLikes += 1;
 
         boolean result = boardRepository.updateLikes(boardId, Integer.valueOf(boardLikes));
-        if (!result) throw new IllegalArgumentException("잘못된 boardId 입력");
+        if (!result)
+            throw new IllegalArgumentException("잘못된 boardId 입력");
 
         updateUserLikes(userEmail, boardId, existence);
 
@@ -55,9 +59,11 @@ public class LikeServiceImpl implements LikeService {
         log.info("email={}", userEmail);
         UserVO userVO = userRepository.findByEmail(userEmail);
         List<String> likes = userVO.getLikes();
-        if (likes == null) return false;
+        if (likes == null)
+            return false;
         for (String like : likes) {
-            if(like.equals(boardId)) return true;
+            if (like.equals(boardId))
+                return true;
         }
         return false;
     }
@@ -65,9 +71,11 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public void updateUserLikes(String userEmail, String boardId, boolean exist) {
         if (exist) {
-            if (!userRepository.deleteLikes(userEmail, boardId)) throw new IllegalArgumentException();
+            if (!userRepository.deleteLikes(userEmail, boardId))
+                throw new IllegalArgumentException();
         } else {
-            if (!userRepository.addLikes(userEmail, boardId)) throw new IllegalArgumentException();
+            if (!userRepository.addLikes(userEmail, boardId))
+                throw new IllegalArgumentException();
         }
     }
 }

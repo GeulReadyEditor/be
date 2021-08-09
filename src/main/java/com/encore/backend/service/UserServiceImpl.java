@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.encore.backend.dto.UserDto;
-import com.encore.backend.repository.UserRepository;
+import com.encore.backend.repository.user.UserRepository;
 import com.encore.backend.vo.UserVO;
 
 import org.modelmapper.ModelMapper;
@@ -97,6 +97,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int getUserScrapsCount(String email) {
+        int result = userRepository.findScrapsCountByEmail(email);
+        return result;
+    }
+
+    @Override
     public List<String> getUserFollowers(String email) {
         List<String> followers = userRepository.findFollowersByEmail(email).getFollowers();
         return followers;
@@ -115,8 +121,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int getUserScrapsCount(String email) {
-        int result = userRepository.findScrapsCountByEmail(email);
+    public List<String> getUserFollowings(String email) {
+        List<String> following = userRepository.findFollowingsByEmail(email).getFollowings();
+        return following;
+    }
+
+    @Override
+    public boolean addUserFollowings(String email, String follower) {
+        boolean result = userRepository.addUserFollowings(email, follower);
+        return result;
+    }
+
+    @Override
+    public boolean removeUserFollowings(String followEmail, String email) {
+        boolean result = userRepository.removeUserFollowings(followEmail, email);
         return result;
     }
 

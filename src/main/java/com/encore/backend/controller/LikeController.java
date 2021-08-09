@@ -20,7 +20,8 @@ public class LikeController {
 
     @PostMapping
     public ResponseEntity<Integer> updateLike(@PathVariable String boardId, @RequestBody LikeInputForm form) {
-        if(form == null) throw new IllegalArgumentException();
+        if (form == null)
+            throw new IllegalArgumentException();
 
         int boardLikes = likeService.updateBoardLikes(boardId, form.getUserEmail());
         return new ResponseEntity<>(Integer.valueOf(boardLikes), HttpStatus.OK);

@@ -1,4 +1,4 @@
-package com.encore.backend.repository;
+package com.encore.backend.repository.board;
 
 import java.util.List;
 

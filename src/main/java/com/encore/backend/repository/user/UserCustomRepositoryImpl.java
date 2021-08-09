@@ -1,4 +1,4 @@
-package com.encore.backend.repository;
+package com.encore.backend.repository.user;
 
 import java.util.Map;
 import java.util.Objects;
@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
-import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -36,34 +35,6 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     }
 
     @Override
-    public boolean addUserScraps(String email, String boardId) {
-        UpdateResult result = operations.updateFirst(Query.query(Criteria.where("email").is(email)),
-                new Update().push("scraps", boardId), UserVO.class);
-        return result.getModifiedCount() > 0;
-    }
-
-    @Override
-    public boolean removeUserScraps(String email, String boardId) {
-        UpdateResult result = operations.updateFirst(Query.query(Criteria.where("email").is(email)),
-                new Update().pull("scraps", boardId), UserVO.class);
-        return result.getModifiedCount() > 0;
-    }
-
-    @Override
-    public boolean addUserFollowers(String email, String followerEmail) {
-        UpdateResult result = operations.updateFirst(Query.query(Criteria.where("email").is(email)),
-                new Update().push("followers", followerEmail), UserVO.class);
-        return result.getModifiedCount() > 0;
-    }
-
-    @Override
-    public boolean removeUserFollowers(String email, String follower) {
-        UpdateResult result = operations.updateFirst(Query.query(Criteria.where("email").is(email)),
-                new Update().pull("followers", follower), UserVO.class);
-        return result.getModifiedCount() > 0;
-    }
-
-    @Override
     public int findScrapsCountByEmail(String email) {
         MatchOperation match = new MatchOperation(Criteria.where("email").is(email));
         ProjectionOperation group = Aggregation.project("users").and("scraps").size().as("size");
@@ -87,17 +58,4 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
         return updateResult.getMatchedCount() > 0;
     }
 
-    @Override
-    public boolean deleteLikes(String userEmail, String boardId) {
-        UpdateResult result = operations.updateFirst(Query.query(Criteria.where("email").is(userEmail)),
-                new Update().pull("likes", boardId), UserVO.class);
-        return result.getModifiedCount() > 0;
-    }
-
-    @Override
-    public boolean addLikes(String userEmail, String boardId) {
-        UpdateResult result = operations.updateFirst(Query.query(Criteria.where("email").is(userEmail)),
-                new Update().push("likes", boardId), UserVO.class);
-        return result.getModifiedCount() > 0;
-    }
 }

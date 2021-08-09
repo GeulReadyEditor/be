@@ -3,7 +3,7 @@ package com.encore.backend.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.encore.backend.repository.TempBoardRepository;
+import com.encore.backend.repository.tempboard.TempBoardRepository;
 import com.encore.backend.vo.TempBoard;
 
 import org.springframework.beans.factory.annotation.Autowired;

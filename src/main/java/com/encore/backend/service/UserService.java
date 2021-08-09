@@ -24,11 +24,17 @@ public interface UserService {
 
     List<String> getUserFollowers(String email);
 
+    boolean updateUserByEmail(String email, UserVO user);
+
     boolean addUserFollowers(String email, String followerEmail);
 
     boolean removeUserFollowers(String email, String followerEmail);
 
     int getUserScrapsCount(String email);
 
-    boolean updateUserByEmail(String email, UserVO user);
+    List<String> getUserFollowings(String email);
+
+    boolean addUserFollowings(String email, String follower);
+
+    boolean removeUserFollowings(String followEmail, String email);
 }
