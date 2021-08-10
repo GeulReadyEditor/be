@@ -32,7 +32,6 @@ public class TempBoardController {
 
     @GetMapping()
     public List<TempBoard> getAllTempBoard(@RequestBody TempBoardInputForm form) {
-
         if (form.getTempBoardId() != null) {
             return tempBoardService.findTempBoard(form.getTempBoardId());
         } else if (form.getUserEmail() != null) {

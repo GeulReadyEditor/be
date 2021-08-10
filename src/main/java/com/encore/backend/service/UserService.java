@@ -1,12 +1,13 @@
 package com.encore.backend.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.encore.backend.dto.UserDto;
 import com.encore.backend.vo.UserVO;
 
 public interface UserService {
-    UserDto createUser(UserDto userDto);
+    UserDto createUser(UserDto userDto) throws IOException;
 
     UserDto getUserByUserId(String userId);
 
@@ -24,7 +25,7 @@ public interface UserService {
 
     List<String> getUserFollowers(String email);
 
-    boolean updateUserByEmail(String email, UserVO user);
+    boolean updateUserByEmail(String email, UserDto user);
 
     boolean addUserFollowers(String email, String followerEmail);
 

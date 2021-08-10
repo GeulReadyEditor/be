@@ -13,13 +13,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.cors();
-        // http.authorizeRequests(ExpressionInterceptUrlRegistry ->
-        // ExpressionInterceptUrlRegistry
-        // .antMatchers(HttpMethod.GET,
-        // "/board").permitAll().antMatchers(HttpMethod.POST, "/users").permitAll()
-        // .antMatchers(HttpMethod.GET,
-        // "/comment").permitAll().anyRequest().authenticated()).antMatcher("/**")
-        // .oauth2ResourceServer().jwt();
+        http.authorizeRequests(ExpressionInterceptUrlRegistry -> ExpressionInterceptUrlRegistry
+                .antMatchers(HttpMethod.GET, "/board").permitAll().antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.GET, "/comment").permitAll().anyRequest().authenticated()).antMatcher("/board")
+                .oauth2ResourceServer().jwt();
         http.headers().frameOptions().disable();
     }
 }

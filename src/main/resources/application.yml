@@ -1,4 +1,8 @@
 spring:
+  profiles:
+    includes:
+      - aws
+      - credentials
   data:
     mongodb:
       host: onegomongo.ddns.net

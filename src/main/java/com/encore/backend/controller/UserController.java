@@ -1,6 +1,9 @@
 package com.encore.backend.controller;
 
+import java.io.IOException;
+
 import com.encore.backend.dto.UserDto;
+import com.encore.backend.s3.S3Uploader;
 import com.encore.backend.service.UserService;
 import com.encore.backend.vo.ResponseUser;
 import com.encore.backend.vo.UserVO;
@@ -13,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,11 +36,10 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<ResponseUser> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<ResponseUser> createUser(@ModelAttribute UserDto userDto) throws IOException {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        userService.createUser(userDto);
-        ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);
+        ResponseUser responseUser = mapper.map(userService.createUser(userDto), ResponseUser.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
     }
 
@@ -48,7 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{email}")
-    public ResponseEntity<String> updateUser(@PathVariable String email, @RequestBody UserVO user) {
+    public ResponseEntity<String> updateUser(@PathVariable String email, @ModelAttribute UserDto user) {
         boolean result = userService.updateUserByEmail(email, user);
 
         return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)

@@ -19,6 +19,6 @@ public interface UserRepository extends CrudRepository<UserVO, String>, UserCust
     UserVO findFollowersByEmail(String email);
 
     @Query(value = "{email:?0}", fields = "{_id:0,email:0,name:0,nickName:0,intro:0,profileImage:0,scraps:0,followers:0,tags:0}")
-    UserDto findFollowingsByEmail(String email);
+    UserVO findFollowingsByEmail(String email);
 
 }

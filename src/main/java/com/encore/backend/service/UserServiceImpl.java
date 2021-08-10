@@ -1,30 +1,33 @@
 package com.encore.backend.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.encore.backend.dto.UserDto;
 import com.encore.backend.repository.user.UserRepository;
+import com.encore.backend.s3.S3Uploader;
 import com.encore.backend.vo.UserVO;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+    private final S3Uploader s3Uploader;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, S3Uploader s3Uploader) {
         this.userRepository = userRepository;
+        this.s3Uploader = s3Uploader;
     }
 
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public UserDto createUser(UserDto userDto) throws IOException {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         UserVO user = mapper.map(userDto, UserVO.class);
@@ -36,6 +39,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
         UserDto returnUserDto = mapper.map(user, UserDto.class);
+        System.out.println(returnUserDto);
         return returnUserDto;
     }
 
@@ -65,15 +69,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateUserByEmail(String email, UserVO user) {
-        boolean result = userRepository.updateUserByEmail(email, user);
+    public boolean updateUserByEmail(String email, UserDto userDto) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        UserVO userVO = mapper.map(userDto, UserVO.class);
+        boolean result = true;
+        try {
+            userVO.setProfileImage(s3Uploader.upload(userDto.getProfileImageFile(), "profileImages", email));
+            result = userRepository.updateUserByEmail(email, userVO);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
         return result;
     }
 
     @Override
     public boolean deleteUserByEmail(String email) {
-        boolean flag = userRepository.deleteUserByEmail(email);
-        return flag;
+        boolean result = true;
+        try {
+            s3Uploader.remove(email);
+            result = userRepository.deleteUserByEmail(email);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return result;
     }
 
     @Override
