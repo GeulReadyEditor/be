@@ -1,6 +1,7 @@
 package com.encore.backend.controller;
 
 import com.encore.backend.dto.LikeInputForm;
+import com.encore.backend.dto.LikeOutputForm;
 import com.encore.backend.service.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,12 +20,12 @@ public class LikeController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> updateLike(@PathVariable String boardId, @RequestBody LikeInputForm form) {
+    public ResponseEntity<LikeOutputForm> updateLike(@PathVariable String boardId, @RequestBody LikeInputForm form) {
         if (form == null)
             throw new IllegalArgumentException();
 
         int boardLikes = likeService.updateBoardLikes(boardId, form.getUserEmail());
-        return new ResponseEntity<>(Integer.valueOf(boardLikes), HttpStatus.OK);
+        return new ResponseEntity<>(new LikeOutputForm(Integer.valueOf(boardLikes)), HttpStatus.OK);
     }
 
 }
