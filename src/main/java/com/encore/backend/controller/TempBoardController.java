@@ -31,15 +31,17 @@ public class TempBoardController {
     private final TempBoardService tempBoardService;
 
     @GetMapping()
-    public List<TempBoard> getAllTempBoard(@RequestBody TempBoardInputForm form) {
+    public ResponseEntity<List<TempBoard>> getAllTempBoard(@RequestBody TempBoardInputForm form) {
 
         if (form.getTempBoardId() != null) {
-            return tempBoardService.findTempBoard(form.getTempBoardId());
+            return new ResponseEntity<>(tempBoardService.findTempBoard(form.getTempBoardId()), HttpStatus.OK);
         } else if (form.getUserEmail() != null) {
             if (form.getPageNumber() == null)
                 throw new IllegalArgumentException();
 
-            return tempBoardService.findAllByUser_id(form.getUserEmail(), form.getPageNumber().intValue());
+            return new ResponseEntity<>(
+                    tempBoardService.findAllByUser_id(form.getUserEmail(), form.getPageNumber().intValue()),
+                    HttpStatus.OK);
         } else
             throw new IllegalArgumentException();
     }
@@ -55,7 +57,7 @@ public class TempBoardController {
     public ResponseEntity<String> upsertTempBoard(@RequestBody TempBoard tempBoard) {
         String result = tempBoardService.upsertTempBoard(tempBoard);
         if (result != null) {
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
         }
