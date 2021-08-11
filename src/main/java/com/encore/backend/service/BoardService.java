@@ -54,7 +54,6 @@ public class BoardService {
         String title = (String) parameters.get("boardTitle");
         String nickName = (String) parameters.get("nickName");
         String tag = (String) parameters.get("tag");
-        System.out.println(title);
         if (title != null && nickName != null && tag != null) {
             result = repo.countByTitleLikeOrNickNameOrTagsIn(title, nickName, tag);
         } else if (title != null) {
@@ -71,6 +70,7 @@ public class BoardService {
 
     public boolean insertBoard(Board board) {
         board.setModDatetime(Calendar.getInstance().getTime());
+        System.out.println();
         if (repo.insert(board) == null)
             return false;
         return true;

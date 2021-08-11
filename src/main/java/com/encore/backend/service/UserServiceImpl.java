@@ -39,7 +39,6 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
         UserDto returnUserDto = mapper.map(user, UserDto.class);
-        System.out.println(returnUserDto);
         return returnUserDto;
     }
 
@@ -77,7 +76,6 @@ public class UserServiceImpl implements UserService {
         try {
             if (userDto.getProfileImageFile() != null)
                 userVO.setProfileImage(s3Uploader.upload(userDto.getProfileImageFile(), "profileImages", email));
-            System.out.println(userDto);
             result = userRepository.updateUserByEmail(email, userVO);
         } catch (IOException e) {
             e.printStackTrace();
