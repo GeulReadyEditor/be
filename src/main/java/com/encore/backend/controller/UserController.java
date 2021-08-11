@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<ResponseUser> createUser(@ModelAttribute UserDto userDto) throws IOException {
+    public ResponseEntity<ResponseUser> createUser(@RequestBody UserDto userDto) throws IOException {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         ResponseUser responseUser = mapper.map(userService.createUser(userDto), ResponseUser.class);

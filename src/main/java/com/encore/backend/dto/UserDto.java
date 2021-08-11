@@ -21,6 +21,7 @@ public class UserDto {
     private String nickName;
     private MultipartFile profileImageFile;
     private String profileImage;
+    private String intro;
 
     private List<String> scraps;
     private List<String> likes;
