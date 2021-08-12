@@ -6,6 +6,7 @@ import java.util.Map;
 import com.encore.backend.service.TempBoardService;
 import com.encore.backend.vo.TempBoard;
 import com.encore.backend.vo.TempBoardDeleteInputForm;
+import com.encore.backend.dto.TempBoardDTO;
 import com.encore.backend.dto.TempBoardInputForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +48,8 @@ public class TempBoardController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> upsertTempBoard(@ModelAttribute TempBoard tempBoard) {
-        String result = tempBoardService.upsertTempBoard(tempBoard);
+    public ResponseEntity<String> upsertTempBoard(@ModelAttribute TempBoardDTO tempBoardDTO) {
+        String result = tempBoardService.upsertTempBoard(tempBoardDTO);
         if (result != null) {
             return new ResponseEntity<>(result, HttpStatus.CREATED);
         } else {

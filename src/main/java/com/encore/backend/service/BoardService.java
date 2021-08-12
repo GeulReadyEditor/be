@@ -1,17 +1,22 @@
 package com.encore.backend.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.encore.backend.dto.BoardDTO;
 import com.encore.backend.repository.board.BoardRepository;
-import com.encore.backend.vo.Board;
+import com.encore.backend.s3.S3Uploader;
+import com.encore.backend.vo.BoardVO;
 import com.encore.backend.vo.Comment;
 import com.encore.backend.vo.Content;
 
 import org.bson.types.ObjectId;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,15 +25,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class BoardService {
     private BoardRepository repo;
+    private final S3Uploader s3Uploader;
 
     @Autowired
-    public BoardService(BoardRepository repo) {
+    public BoardService(BoardRepository repo, S3Uploader s3Uploader) {
         this.repo = repo;
+        this.s3Uploader = s3Uploader;
     }
 
-    public List<Board> selectBoard(Map<String, Object> parameters) {
+    public List<BoardVO> selectBoard(Map<String, Object> parameters) {
         String boardId = (String) parameters.get("boardId");
-        Page<Board> page = null;
+        Page<BoardVO> page = null;
         if (boardId != null) {
             page = repo.findById(boardId, PageRequest.of(0, 1));
         } else {
@@ -68,10 +75,21 @@ public class BoardService {
         return result;
     }
 
-    public boolean insertBoard(Board board) {
-        board.setModDatetime(Calendar.getInstance().getTime());
-        System.out.println();
-        if (repo.insert(board) == null)
+    public boolean insertBoard(BoardDTO boardDTO) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        BoardVO boardVO = mapper.map(boardDTO, BoardVO.class);
+        try {
+            if (boardDTO.getTitleImageFile() != null) {
+                boardVO.setTitleImage(s3Uploader.upload(boardDTO.getTitleImageFile(), "", boardVO.getUserEmail()));
+            } else {
+                boardVO.setTitleImage("");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        boardVO.setModDatetime(Calendar.getInstance().getTime());
+        if (repo.insert(boardVO) == null)
             return false;
         return true;
     }
@@ -94,7 +112,7 @@ public class BoardService {
         int pageNumber = Integer.parseInt((String) parameters.get("pageNumber"));
         int start = (pageNumber - 1) * 10;
         int end = pageNumber * 10;
-        List<Board> board = repo.findCommentsById((String) parameters.get("boardId"), start, end);
+        List<BoardVO> board = repo.findCommentsById((String) parameters.get("boardId"), start, end);
         List<Comment> result = new ArrayList<Comment>();
         for (Comment c : board.get(0).getComments()) {
             result.add(c);
@@ -120,10 +138,8 @@ public class BoardService {
         String boardId = (String) parameters.get("boardId");
         String commentId = (String) parameters.get("commentId");
         String comment = (String) parameters.get("comment");
-        String nickName = (String) parameters.get("nickName");
-        String userId = (String) parameters.get("userEmail");
         Date modDatetime = new Date();
-        Comment commentData = new Comment(commentId, userId, nickName, comment, modDatetime);
+        Comment commentData = new Comment(commentId, null, null, comment, modDatetime);
         return repo.updateComment(boardId, commentData);
     }
 }

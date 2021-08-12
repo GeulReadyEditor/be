@@ -3,8 +3,9 @@ package com.encore.backend.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.encore.backend.dto.BoardDTO;
 import com.encore.backend.service.BoardService;
-import com.encore.backend.vo.Board;
+import com.encore.backend.vo.BoardVO;
 import com.encore.backend.vo.Comment;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 public class BoardController {
     private BoardService service;
 
@@ -30,8 +31,8 @@ public class BoardController {
     }
 
     @GetMapping("/board")
-    public ResponseEntity<List<Board>> getBoard(@RequestParam Map<String, Object> parameters) {
-        List<Board> list = service.selectBoard(parameters);
+    public ResponseEntity<List<BoardVO>> getBoard(@RequestParam Map<String, Object> parameters) {
+        List<BoardVO> list = service.selectBoard(parameters);
         return ResponseEntity.status(list == null ? HttpStatus.NOT_FOUND : HttpStatus.OK).body(list);
     }
 
@@ -42,7 +43,7 @@ public class BoardController {
     }
 
     @PostMapping("/board")
-    public ResponseEntity<String> insertBoard(@RequestBody Board board) {
+    public ResponseEntity<String> insertBoard(@RequestBody BoardDTO board) {
         boolean result = service.insertBoard(board);
         return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
                 .body("insert board " + (result ? "suceess" : "fail"));
