@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         UserVO user = mapper.map(userDto, UserVO.class);
+        user.setIntro("");
         user.setFollowers(new ArrayList<String>());
         user.setFollowings(new ArrayList<String>());
         user.setLikes(new ArrayList<String>());
