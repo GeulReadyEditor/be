@@ -23,7 +23,7 @@ public class TempBoardController {
     private final TempBoardService tempBoardService;
 
     @GetMapping()
-    public ResponseEntity<List<TempBoard>> getAllTempBoard(@RequestBody TempBoardInputForm form) {
+    public ResponseEntity<List<TempBoard>> getAllTempBoard(@ModelAttribute TempBoardInputForm form) {
 
         if (form.getTempBoardId() != null) {
             return new ResponseEntity<>(tempBoardService.findTempBoard(form.getTempBoardId()), HttpStatus.OK);
@@ -46,7 +46,7 @@ public class TempBoardController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> upsertTempBoard(@RequestBody TempBoard tempBoard) {
+    public ResponseEntity<String> upsertTempBoard(@ModelAttribute TempBoard tempBoard) {
         String result = tempBoardService.upsertTempBoard(tempBoard);
         if (result != null) {
             return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -56,7 +56,7 @@ public class TempBoardController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<String> deleteTempBoard(@RequestBody TempBoardDeleteInputForm form) {
+    public ResponseEntity<String> deleteTempBoard(@ModelAttribute TempBoardDeleteInputForm form) {
         if (form == null)
             throw new IllegalArgumentException();
 
