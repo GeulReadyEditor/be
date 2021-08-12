@@ -7,7 +7,6 @@ import com.encore.backend.vo.Content;
 import com.encore.backend.vo.Memo;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
@@ -19,7 +18,6 @@ public class TempBoardDTO {
     private String title;
     private String subtitle;
     private String titleImage;
-    private MultipartFile titleImageFile;
     private Date modDatetime;
     private List<Content> contents;
     private List<Memo> memos;

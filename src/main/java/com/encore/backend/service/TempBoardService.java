@@ -13,6 +13,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,18 +42,17 @@ public class TempBoardService {
         return list;
     }
 
-    public String upsertTempBoard(TempBoardDTO tempBoardDTO) {
+    public String upsertTempBoard(TempBoardDTO tempBoardDTO, MultipartFile titleImageFile) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         TempBoard tempBoard = mapper.map(tempBoardDTO, TempBoard.class);
         try {
             if (tempBoard.getId() == null) {
                 TempBoard ret = tempBoardRepository.insert(tempBoard);
-                if (tempBoardDTO.getTitleImageFile() == null) {
+                if (titleImageFile.getOriginalFilename().length() == 0) {
                     tempBoard.setTitleImage("");
                 } else {
-                    tempBoard.setTitleImage(
-                            s3Uploader.upload(tempBoardDTO.getTitleImageFile(), "titleImages", ret.getId()));
+                    tempBoard.setTitleImage(s3Uploader.upload(titleImageFile, "titleImages", ret.getId()));
                 }
                 ret = tempBoardRepository.save(tempBoard);
                 return ret.getId();
