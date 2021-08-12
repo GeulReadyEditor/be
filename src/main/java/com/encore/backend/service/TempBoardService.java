@@ -8,7 +8,6 @@ import com.encore.backend.vo.TempBoard;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +23,10 @@ public class TempBoardService {
         this.tempBoardRepository = tempBoardRepository;
     }
 
-    public List<TempBoard> findAllByUser_id(String userEmail, int pageNum) {
-        // Page<TempBoard> ret = tempBoardRepository.findAll(userId,
-        // PageRequest.of(pageNum, 10));
+    public List<TempBoard> findAllByUser_id(String userEmail, int pageNumber) {
         return tempBoardRepository
-                .findByUserEmail(userEmail, PageRequest.of(pageNum, 10, Sort.Direction.DESC, "userEmail")).getContent();
+                .findByUserEmail(userEmail, PageRequest.of(pageNumber, 5))
+                .getContent();
     }
 
     public List<TempBoard> findTempBoard(String id) {

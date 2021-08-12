@@ -31,8 +31,9 @@ public class TempBoardController {
             if (form.getPageNumber() == null)
                 throw new IllegalArgumentException();
 
+            log.info("pageNumber={}", form.getPageNumber());
             return new ResponseEntity<>(
-                    tempBoardService.findAllByUser_id(form.getUserEmail(), form.getPageNumber().intValue()),
+                    tempBoardService.findAllByUser_id(form.getUserEmail(), form.getPageNumber().intValue() - 1),
                     HttpStatus.OK);
         } else
             throw new IllegalArgumentException();
