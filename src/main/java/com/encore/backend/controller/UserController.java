@@ -3,10 +3,8 @@ package com.encore.backend.controller;
 import java.io.IOException;
 
 import com.encore.backend.dto.UserDto;
-import com.encore.backend.s3.S3Uploader;
 import com.encore.backend.service.UserService;
 import com.encore.backend.vo.ResponseUser;
-import com.encore.backend.vo.UserVO;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -16,13 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/")
@@ -51,8 +50,11 @@ public class UserController {
     }
 
     @PutMapping("/users/{email}")
-    public ResponseEntity<String> updateUser(@PathVariable String email, @ModelAttribute UserDto user) {
-        boolean result = userService.updateUserByEmail(email, user);
+    public ResponseEntity<String> updateUser(@PathVariable String email, @RequestPart UserDto user,
+            @RequestPart MultipartFile profileImageFile) {
+        if (profileImageFile.getOriginalFilename().equals(""))
+            profileImageFile = null;
+        boolean result = userService.updateUserByEmail(email, user, profileImageFile);
 
         return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
                 .body("update user " + (result ? "suceess" : "fail"));

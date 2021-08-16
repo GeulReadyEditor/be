@@ -1,6 +1,5 @@
 package com.encore.backend.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,7 +11,6 @@ import com.encore.backend.repository.board.BoardRepository;
 import com.encore.backend.s3.S3Uploader;
 import com.encore.backend.vo.BoardVO;
 import com.encore.backend.vo.Comment;
-import com.encore.backend.vo.Content;
 
 import org.bson.types.ObjectId;
 import org.modelmapper.ModelMapper;
@@ -21,7 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class BoardService {
     private BoardRepository repo;
@@ -75,27 +77,30 @@ public class BoardService {
         return result;
     }
 
-    public boolean insertBoard(BoardDTO boardDTO) {
+    public boolean upsertBoard(BoardDTO boardDTO, MultipartFile titleImageFile) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        BoardVO boardVO = mapper.map(boardDTO, BoardVO.class);
+        BoardVO board = mapper.map(boardDTO, BoardVO.class);
+        board.setId(boardDTO.getBoardId());
         try {
-            if (boardDTO.getTitleImageFile() != null) {
-                boardVO.setTitleImage(s3Uploader.upload(boardDTO.getTitleImageFile(), "", boardVO.getUserEmail()));
+            if (board.getId() == null) {
+                BoardVO ret = repo.insert(board);
+                board.setTitleImage(titleImageFile.getOriginalFilename().length() == 0 ? ""
+                        : s3Uploader.upload(titleImageFile, "titleImages", ret.getId()));
+                ret = repo.save(board);
+                return true;
             } else {
-                boardVO.setTitleImage("");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        boardVO.setModDatetime(Calendar.getInstance().getTime());
-        if (repo.insert(boardVO) == null)
-            return false;
-        return true;
-    }
+                boolean check = repo.existsById(board.getId());
+                if (!check)
+                    return false;
 
-    public boolean updateBoard(Map<String, Object> parameters) {
-        return repo.updateBoard((String) parameters.get("boardId"), (List<Content>) parameters.get("contents"));
+                repo.save(board);
+                return true;
+            }
+        } catch (Exception e) {
+            log.info("error ", e);
+            return false;
+        }
     }
 
     public boolean deleteBoard(String boardId) {
@@ -110,9 +115,8 @@ public class BoardService {
 
     public List<Comment> getComment(Map<String, Object> parameters) {
         int pageNumber = Integer.parseInt((String) parameters.get("pageNumber"));
-        int start = (pageNumber - 1) * 10;
-        int end = pageNumber * 10;
-        List<BoardVO> board = repo.findCommentsById((String) parameters.get("boardId"), start, end);
+        List<BoardVO> board = repo.findCommentsById((String) parameters.get("boardId"), (pageNumber - 1) * 10,
+                pageNumber * 10);
         List<Comment> result = new ArrayList<Comment>();
         for (Comment c : board.get(0).getComments()) {
             result.add(c);
@@ -121,25 +125,18 @@ public class BoardService {
     }
 
     public boolean insertComment(Map<String, Object> parameters) {
-        String boardId = (String) parameters.get("boardId");
-        Calendar cal = Calendar.getInstance();
-        Comment comment = new Comment(new ObjectId().toString(), (String) parameters.get("userEmail"),
-                (String) parameters.get("nickName"), (String) parameters.get("comment"), cal.getTime());
-        return repo.insertComment(boardId, comment);
+        return repo.insertComment((String) parameters.get("boardId"),
+                new Comment(new ObjectId().toString(), (String) parameters.get("userEmail"),
+                        (String) parameters.get("nickName"), (String) parameters.get("comment"),
+                        Calendar.getInstance().getTime()));
     }
 
     public boolean removeComment(Map<String, Object> parameters) {
-        String boardId = (String) parameters.get("boardId");
-        String commentId = (String) parameters.get("commentId");
-        return repo.removeComment(boardId, commentId);
+        return repo.removeComment((String) parameters.get("boardId"), (String) parameters.get("commentId"));
     }
 
     public boolean updateComment(Map<String, Object> parameters) {
-        String boardId = (String) parameters.get("boardId");
-        String commentId = (String) parameters.get("commentId");
-        String comment = (String) parameters.get("comment");
-        Date modDatetime = new Date();
-        Comment commentData = new Comment(commentId, null, null, comment, modDatetime);
-        return repo.updateComment(boardId, commentData);
+        return repo.updateComment((String) parameters.get("boardId"), new Comment((String) parameters.get("commentId"),
+                null, null, (String) parameters.get("comment"), new Date()));
     }
 }

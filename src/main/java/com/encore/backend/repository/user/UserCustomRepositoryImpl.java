@@ -35,18 +35,6 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     }
 
     @Override
-    public int findScrapsCountByEmail(String email) {
-        MatchOperation match = new MatchOperation(Criteria.where("email").is(email));
-        ProjectionOperation group = Aggregation.project("users").and("scraps").size().as("size");
-
-        Aggregation aggregate = Aggregation.newAggregation(match, group);
-
-        AggregationResults<Map> orderAggregate = operations.aggregate(aggregate, "users", Map.class);
-        int size = (Integer) orderAggregate.getMappedResults().get(0).get("size");
-        return size;
-    }
-
-    @Override
     public boolean updateUserByEmail(String email, UserVO user) {
         ObjectMapper oMapper = new ObjectMapper();
         Map<String, Object> dataMap = oMapper.convertValue(user, Map.class);

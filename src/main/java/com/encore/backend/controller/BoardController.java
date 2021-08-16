@@ -6,7 +6,6 @@ import java.util.Map;
 import com.encore.backend.dto.BoardDTO;
 import com.encore.backend.service.BoardService;
 import com.encore.backend.vo.BoardVO;
-import com.encore.backend.vo.Comment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -43,15 +44,15 @@ public class BoardController {
     }
 
     @PostMapping("/board")
-    public ResponseEntity<String> insertBoard(@RequestBody BoardDTO board) {
-        boolean result = service.insertBoard(board);
+    public ResponseEntity<String> insertBoard(@RequestPart BoardDTO board, @RequestPart MultipartFile titleImageFile) {
+        boolean result = service.upsertBoard(board, titleImageFile);
         return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
                 .body("insert board " + (result ? "suceess" : "fail"));
     }
 
     @PutMapping("/board")
-    public ResponseEntity<String> updateBoard(@RequestBody Map<String, Object> parameters) {
-        boolean result = service.updateBoard(parameters);
+    public ResponseEntity<String> updateBoard(@RequestPart BoardDTO board, @RequestPart MultipartFile titleImageFile) {
+        boolean result = service.upsertBoard(board, titleImageFile);
         return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
                 .body("update board " + (result ? "suceess" : "fail"));
     }
@@ -63,30 +64,4 @@ public class BoardController {
                 .body("delete board " + (result ? "suceess" : "fail"));
     }
 
-    @GetMapping("/comment")
-    public ResponseEntity<List<Comment>> getComment(@RequestParam Map<String, Object> parameters) {
-        List<Comment> comments = service.getComment(parameters);
-        return ResponseEntity.status(comments == null ? HttpStatus.NOT_FOUND : HttpStatus.OK).body(comments);
-    }
-
-    @PostMapping("/comment")
-    public ResponseEntity<String> insertComment(@RequestBody Map<String, Object> parameters) {
-        boolean result = service.insertComment(parameters);
-        return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
-                .body("update comment " + (result ? "suceess" : "fail"));
-    }
-
-    @DeleteMapping("/comment")
-    public ResponseEntity<String> removeComment(@RequestBody Map<String, Object> parameters) {
-        boolean result = service.removeComment(parameters);
-        return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
-                .body("delete comment " + (result ? "suceess" : "fail"));
-    }
-
-    @PutMapping("/comment")
-    public ResponseEntity<String> updateComment(@RequestBody Map<String, Object> parameters) {
-        boolean result = service.updateComment(parameters);
-        return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
-                .body("update comment " + (result ? "suceess" : "fail"));
-    }
 }

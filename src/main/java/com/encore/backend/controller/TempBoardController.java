@@ -9,8 +9,6 @@ import com.encore.backend.service.TempBoardService;
 import com.encore.backend.vo.TempBoard;
 import com.encore.backend.vo.TempBoardDeleteInputForm;
 
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,13 +27,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/tempBoard")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class TempBoardController {
 
     private final TempBoardService tempBoardService;
 
-    @GetMapping()
+    @GetMapping("/tempBoard")
     public ResponseEntity<List<TempBoard>> getAllTempBoard(@ModelAttribute TempBoardInputForm form) {
 
         if (form.getTempBoardId() != null) {
@@ -53,14 +49,14 @@ public class TempBoardController {
             throw new IllegalArgumentException();
     }
 
-    @GetMapping("/count")
+    @GetMapping("/tempBoard/count")
     public ResponseEntity<Long> getTempBoardCount(@RequestParam Map<String, Object> parameters) {
         String userEmail = (String) parameters.get("userEmail");
         long count = tempBoardService.getBoardsCount(userEmail);
         return ResponseEntity.status(HttpStatus.OK).body(count);
     }
 
-    @PostMapping()
+    @PostMapping("/tempBoard")
     public ResponseEntity<String> upsertTempBoard(@RequestPart MultipartFile titleImageFile,
             @RequestPart TempBoardDTO tempBoardDTO) {
         String result = tempBoardService.upsertTempBoard(tempBoardDTO, titleImageFile);
@@ -72,7 +68,7 @@ public class TempBoardController {
         }
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/tempBoard")
     public ResponseEntity<String> deleteTempBoard(@ModelAttribute TempBoardDeleteInputForm form) {
         if (form == null)
             throw new IllegalArgumentException();

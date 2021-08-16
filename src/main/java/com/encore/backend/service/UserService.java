@@ -6,6 +6,8 @@ import java.util.List;
 import com.encore.backend.dto.UserDto;
 import com.encore.backend.vo.UserVO;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public interface UserService {
     UserDto createUser(UserDto userDto) throws IOException;
 
@@ -25,7 +27,7 @@ public interface UserService {
 
     List<String> getUserFollowers(String email);
 
-    boolean updateUserByEmail(String email, UserDto user);
+    boolean updateUserByEmail(String email, UserDto user, MultipartFile profileImage);
 
     boolean addUserFollowers(String email, String followerEmail);
 

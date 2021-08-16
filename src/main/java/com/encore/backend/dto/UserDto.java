@@ -6,8 +6,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.Data;
 
 @Data
@@ -19,7 +17,6 @@ public class UserDto {
     @NotNull(message = "Name cannot be null")
     @Size(min = 2, message = "Name not be less than two characters")
     private String nickName;
-    private MultipartFile profileImageFile;
     private String profileImage;
     private String intro;
 

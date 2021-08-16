@@ -61,6 +61,12 @@ public class TempBoardService {
                 if (!check)
                     return null;
 
+                if (titleImageFile.getOriginalFilename().length() == 0) {
+                    tempBoard.setTitleImage("");
+                } else {
+                    tempBoard.setTitleImage(s3Uploader.upload(titleImageFile, "titleImages", tempBoard.getId()));
+                }
+
                 tempBoardRepository.save(tempBoard);
                 return tempBoard.getId();
             }

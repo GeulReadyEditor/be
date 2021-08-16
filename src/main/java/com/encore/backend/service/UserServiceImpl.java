@@ -14,6 +14,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -69,14 +70,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateUserByEmail(String email, UserDto userDto) {
+    public boolean updateUserByEmail(String email, UserDto userDto, MultipartFile profileImage) {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         UserVO userVO = mapper.map(userDto, UserVO.class);
         boolean result = true;
         try {
-            if (userDto.getProfileImageFile() != null)
-                userVO.setProfileImage(s3Uploader.upload(userDto.getProfileImageFile(), "profileImages", email));
+            if (profileImage != null)
+                userVO.setProfileImage(s3Uploader.upload(profileImage, "profileImages", email));
             result = userRepository.updateUserByEmail(email, userVO);
         } catch (IOException e) {
             e.printStackTrace();

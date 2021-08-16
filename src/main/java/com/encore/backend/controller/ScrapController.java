@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/scraps/{email}")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ScrapController {
     private UserService userService;
@@ -29,7 +29,7 @@ public class ScrapController {
         this.userService = userService;
     }
 
-    @GetMapping("/scraps/{email}")
+    @GetMapping("")
     public ResponseEntity<List<String>> getUserScraps(@PathVariable String email,
             @RequestParam Map<String, Object> parameters) {
         int scrapPageNumber = Integer.parseInt((String) parameters.get("pageNumber"));
@@ -37,14 +37,14 @@ public class ScrapController {
         return ResponseEntity.status(scraps == null ? HttpStatus.NO_CONTENT : HttpStatus.OK).body(scraps);
     }
 
-    @GetMapping("/scraps/{email}/count")
+    @GetMapping("/count")
     public ResponseEntity<Integer> getUserScrapsCount(@PathVariable String email,
             @RequestParam Map<String, Object> parameters) {
         int scrapsCount = userService.getUserScrapsCount(email);
         return ResponseEntity.status(HttpStatus.OK).body(scrapsCount);
     }
 
-    @PostMapping("/scraps/{email}")
+    @PostMapping("")
     public ResponseEntity<String> addUserScraps(@PathVariable String email,
             @RequestBody Map<String, Object> parameters) {
         String boardId = (String) parameters.get("boardId");
@@ -53,7 +53,7 @@ public class ScrapController {
                 .body("insert scrap to user " + (result ? "suceess" : "fail"));
     }
 
-    @DeleteMapping("/scraps/{email}")
+    @DeleteMapping("")
     public ResponseEntity<String> removeUserScraps(@PathVariable String email,
             @RequestBody Map<String, Object> parameters) {
         String boardId = (String) parameters.get("boardId");

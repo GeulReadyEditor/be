@@ -1,6 +1,5 @@
 package com.encore.backend.repository.user;
 
-import com.encore.backend.dto.UserDto;
 import com.encore.backend.vo.UserVO;
 
 import org.springframework.data.mongodb.repository.Query;
