@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         UserVO userVO = mapper.map(userDto, UserVO.class);
         boolean result = true;
         try {
-            if (profileImage != null)
+            if (profileImage.getOriginalFilename().length() > 0)
                 userVO.setProfileImage(s3Uploader.upload(profileImage, "profileImages", email));
             result = userRepository.updateUserByEmail(email, userVO);
         } catch (IOException e) {
