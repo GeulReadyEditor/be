@@ -101,64 +101,54 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<String> getUserScraps(String email, int scrapPageNumber) {
-        int start = (scrapPageNumber - 1) * 10;
-        int end = scrapPageNumber * 10;
-        List<String> returnScraps = userRepository.findScrapsByEmail(email, start, end).getScraps();
+        List<String> returnScraps = userRepository
+                .findScrapsByEmail(email, (scrapPageNumber - 1) * 10, scrapPageNumber * 10).getScraps();
         return returnScraps;
     }
 
     @Override
     public boolean addUserScraps(String email, String boardId) {
-        boolean result = userRepository.addUserScraps(email, boardId);
-        return result;
+        return userRepository.addUserScraps(email, boardId);
     }
 
     @Override
     public boolean removeUserScraps(String email, String boardId) {
-        boolean result = userRepository.removeUserScraps(email, boardId);
-        return result;
+        return userRepository.removeUserScraps(email, boardId);
     }
 
     @Override
     public int getUserScrapsCount(String email) {
-        int result = userRepository.findScrapsCountByEmail(email);
-        return result;
+        return userRepository.findScrapsCountByEmail(email);
     }
 
     @Override
     public List<String> getUserFollowers(String email) {
-        List<String> followers = userRepository.findFollowersByEmail(email).getFollowers();
-        return followers;
+        return userRepository.findFollowersByEmail(email).getFollowers();
     }
 
     @Override
     public boolean addUserFollowers(String email, String followerEmail) {
-        boolean result = userRepository.addUserFollowers(email, followerEmail);
-        return result;
+        return userRepository.addUserFollowers(email, followerEmail);
     }
 
     @Override
     public boolean removeUserFollowers(String email, String followerEmail) {
-        boolean result = userRepository.removeUserFollowers(email, followerEmail);
-        return result;
+        return userRepository.removeUserFollowers(email, followerEmail);
     }
 
     @Override
     public List<String> getUserFollowings(String email) {
-        List<String> following = userRepository.findFollowingsByEmail(email).getFollowings();
-        return following;
+        return userRepository.findFollowingsByEmail(email).getFollowings();
     }
 
     @Override
     public boolean addUserFollowings(String email, String followEmail) {
-        boolean result = userRepository.addUserFollowings(email, followEmail);
-        return result;
+        return userRepository.addUserFollowings(email, followEmail);
     }
 
     @Override
     public boolean removeUserFollowings(String email, String followEmail) {
-        boolean result = userRepository.removeUserFollowings(email, followEmail);
-        return result;
+        return userRepository.removeUserFollowings(email, followEmail);
     }
 
 }
