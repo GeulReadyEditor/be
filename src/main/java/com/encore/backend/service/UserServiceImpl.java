@@ -38,7 +38,8 @@ public class UserServiceImpl implements UserService {
         user.setLikes(new ArrayList<String>());
         user.setScraps(new ArrayList<String>());
         user.setTags(new ArrayList<String>());
-
+        user.setProfileImage(
+                "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light");
         userRepository.save(user);
         UserDto returnUserDto = mapper.map(user, UserDto.class);
         return returnUserDto;

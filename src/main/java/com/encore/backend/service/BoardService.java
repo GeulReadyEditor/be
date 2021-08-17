@@ -126,7 +126,7 @@ public class BoardService {
 
     public boolean insertComment(Map<String, Object> parameters) {
         return repo.insertComment((String) parameters.get("boardId"),
-                new Comment(new ObjectId().toString(), (String) parameters.get("userEmail"),
+                new Comment(new ObjectId().toString(), (String) parameters.get("userId"),
                         (String) parameters.get("nickName"), (String) parameters.get("comment"),
                         Calendar.getInstance().getTime()));
     }
@@ -136,7 +136,8 @@ public class BoardService {
     }
 
     public boolean updateComment(Map<String, Object> parameters) {
-        return repo.updateComment((String) parameters.get("boardId"), new Comment((String) parameters.get("commentId"),
-                null, null, (String) parameters.get("comment"), new Date()));
+        return repo.updateComment((String) parameters.get("boardId"),
+                new Comment((String) parameters.get("commentId"), (String) parameters.get("userId"),
+                        (String) parameters.get("nickName"), (String) parameters.get("comment"), new Date()));
     }
 }
