@@ -48,29 +48,20 @@ public class TempBoardService {
         TempBoard tempBoard = mapper.map(tempBoardDTO, TempBoard.class);
         try {
             if (tempBoard.getId() == null) {
-                TempBoard ret = tempBoardRepository.insert(tempBoard);
-                if (titleImageFile.getOriginalFilename().length() == 0) {
-                    tempBoard.setTitleImage("");
-                } else {
-                    tempBoard.setTitleImage(s3Uploader.upload(titleImageFile, "titleImages", ret.getId()));
-                }
-                ret = tempBoardRepository.save(tempBoard);
-                return ret.getId();
+                tempBoard = tempBoardRepository.insert(tempBoard);
             } else {
                 boolean check = tempBoardRepository.existsById(tempBoard.getId());
                 if (!check)
                     return null;
-
-                if (titleImageFile.getOriginalFilename().length() == 0) {
-                    tempBoard.setTitleImage("");
-                } else {
-                    tempBoard.setTitleImage(s3Uploader.upload(titleImageFile, "titleImages", tempBoard.getId()));
-                }
-
-                tempBoardRepository.save(tempBoard);
-                return tempBoard.getId();
             }
-        } catch (Exception e) {
+            tempBoard.setTitleImage(titleImageFile.getOriginalFilename().length() == 0 ? ""
+                    : s3Uploader.upload(titleImageFile, "titleImages", tempBoard.getId()));
+            tempBoardRepository.save(tempBoard);
+            return tempBoard.getId();
+
+        } catch (
+
+        Exception e) {
             log.info("error ", e);
             return null;
         }
@@ -93,8 +84,7 @@ public class TempBoardService {
     }
 
     public long getBoardsCount(String userEmail) {
-        long result = tempBoardRepository.countByUserEmail(userEmail);
-        return result;
+        return tempBoardRepository.countByUserEmail(userEmail);
     }
 
 }
