@@ -13,9 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,18 +43,12 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(count);
     }
 
-    @PostMapping("/board")
-    public ResponseEntity<String> insertBoard(@RequestPart BoardDTO board, @RequestPart MultipartFile titleImageFile) {
+    @RequestMapping(value = "/board", method = { RequestMethod.POST, RequestMethod.PUT })
+    public ResponseEntity<String> upsertBoard(@RequestPart BoardDTO board, @RequestPart MultipartFile titleImageFile) {
         boolean result = service.upsertBoard(board, titleImageFile);
         return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
                 .body("insert board " + (result ? "suceess" : "fail"));
-    }
 
-    @PutMapping("/board")
-    public ResponseEntity<String> updateBoard(@RequestPart BoardDTO board, @RequestPart MultipartFile titleImageFile) {
-        boolean result = service.upsertBoard(board, titleImageFile);
-        return ResponseEntity.status(result ? HttpStatus.CREATED : HttpStatus.NO_CONTENT)
-                .body("update board " + (result ? "suceess" : "fail"));
     }
 
     @DeleteMapping("/board")
