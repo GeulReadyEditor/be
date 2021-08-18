@@ -118,9 +118,11 @@ public class BoardService {
         List<BoardVO> board = repo.findCommentsById((String) parameters.get("boardId"), (pageNumber - 1) * 10,
                 pageNumber * 10);
         List<Comment> result = new ArrayList<Comment>();
-        for (Comment c : board.get(0).getComments()) {
-            result.add(c);
-        }
+        List<Comment> comments = board.get(0).getComments();
+        if (comments != null)
+            for (Comment c : board.get(0).getComments()) {
+                result.add(c);
+            }
         return result;
     }
 
