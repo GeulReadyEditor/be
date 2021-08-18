@@ -14,9 +14,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.cors();
         http.authorizeRequests(ExpressionInterceptUrlRegistry -> ExpressionInterceptUrlRegistry
-                .antMatchers(HttpMethod.GET, "/board").permitAll().antMatchers(HttpMethod.POST, "/users").permitAll()
-                .antMatchers(HttpMethod.GET, "/comment").permitAll().anyRequest().authenticated()).antMatcher("/**")
-                .oauth2ResourceServer().jwt();
+                .antMatchers(HttpMethod.GET, "/board/count").permitAll().antMatchers(HttpMethod.GET, "/board")
+                .permitAll().antMatchers(HttpMethod.POST, "/users").permitAll().antMatchers(HttpMethod.GET, "/users/**")
+                .permitAll().antMatchers(HttpMethod.GET, "/comment").permitAll().anyRequest().authenticated())
+                .antMatcher("/**").oauth2ResourceServer().jwt();
         http.headers().frameOptions().disable();
     }
 }

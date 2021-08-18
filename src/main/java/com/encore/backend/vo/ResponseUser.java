@@ -10,7 +10,6 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseUser {
     private String email;
-    private String name;
     private String nickName;
     private String intro;
     private String profileImage;
